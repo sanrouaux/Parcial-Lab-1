@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1538492396 source:d:\parcial lab 1 rouaux\archivopeliculas\main.c
+	<stdio.h>
+	<stdlib.h>
+	"peliculas.h"
+
+1538491388 d:\parcial lab 1 rouaux\archivopeliculas\peliculas.h
+
+1538492243 source:d:\parcial lab 1 rouaux\archivopeliculas\peliculas.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"peliculas.h"
+
