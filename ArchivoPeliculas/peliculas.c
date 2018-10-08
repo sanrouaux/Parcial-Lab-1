@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "peliculas.h"
+#include "validaciones.h"
 
 
-
-int inicializaLista(ePelicula lista[], int tamano)
+int inicializaListaPeliculas(ePelicula lista[], int tamano)
 {
     int i;
     for(i=0; i<tamano; i++)
@@ -18,12 +18,11 @@ int inicializaLista(ePelicula lista[], int tamano)
 }
 
 
-
-int buscaLugarLibre(ePelicula lista[],int tamano)
+int buscaLugarLibrePelicula(ePelicula lista[],int tamano)
 {
-    int retorno;
+    int retorno = -1;
     int i;
-    for(i=0; i<tamano; i++)
+    for(i = 0; i < tamano; i++)
     {
         if(lista[i].estado == LIBRE)
         {
@@ -35,72 +34,64 @@ int buscaLugarLibre(ePelicula lista[],int tamano)
 }
 
 
-int buscaIdSiguiente(ePelicula lista[],int tamano)
+int buscaIdSiguientePelicula(ePelicula lista[],int tamano)
 {
-    int retorno = -1;
+    int retorno;
     int i;
-    for(i=0; i<tamano; i++)
+    for(i = 0; i < tamano; i++)
     {
         if(lista[i].estado == OCUPADO)
         {
-            if(lista[i].id>retorno)
+            if(lista[i].id > retorno)
             {
-                retorno=lista[i].id;
+                retorno = lista[i].id;
             }
         }
     }
-    return retorno+1;
+    return retorno + 1;
 }
 
 
 int altaPelicula(ePelicula lista[],int tamano)
 {
     int indice;
-    indice = buscaLugarLibre(lista, tamano);
+    indice = buscaLugarLibrePelicula(lista, tamano);
 
     int id;
-    id = buscaIdSiguiente(lista,tamano);
+    id = buscaIdSiguientePelicula(lista,tamano);
 
 
-    if(indice < tamano)
+    if(indice >= 0)
     {
+        char buffer[1024];
+
         puts("Ingrese titulo: ");
         fflush(stdin);
-        gets(lista[indice].titulo);
-        while(strlen(lista[indice].titulo) >= 100)
-        {
-            puts("Nombre demasiado largo. Ingrese otro: ");
-            fflush(stdin);
-            gets(lista[indice].titulo);
-        }
+        gets(buffer);
+        validaLargoCadena(buffer, 100);
+        strcpy(lista[indice].titulo, buffer);
 
         puts("Ingrese anio: ");
         fflush(stdin);
         scanf("%d", &lista[indice].anio);
-        while(lista[indice].anio < 0 || lista[indice].anio > 2300)
-        {
-            puts("Anio fuera de rango. Ingrese otro: ");
-            fflush(stdin);
-            gets(lista[indice].anio);
-        }
+        lista[indice].anio = validaRango(lista[indice].anio, 2100, 1800);
 
-        puts("Ingrese nacionalidad");
+        puts("Ingrese nacionalidad: ");
         fflush(stdin);
-        gets(lista[indice].nacionalidad);
-        while(strlen(lista[indice].nacionalidad) >= 50)
-        {
-            puts("Nombre demasiado largo. Ingrese otro: ");
-            fflush(stdin);
-            gets(lista[indice].nacionalidad);
-        }
+        gets(buffer);
+        validaLargoCadena(buffer, 50);
+        strcpy(lista[indice].nacionalidad, buffer);
 
         puts("Ingrese ID director: ");
         fflush(stdin);
         scanf("%d", &lista[indice].director);
-
+        lista[indice].director = validaRango(lista[indice].director, 500, 1);
 
         lista[indice].id = id;
         lista[indice].estado = OCUPADO;
+
+        puts("Se dio de alta la pelicula");
+
     }
     else
     {
@@ -112,12 +103,16 @@ int altaPelicula(ePelicula lista[],int tamano)
 
 int mostrarUno(ePelicula parametro)
 {
-    printf("\n%s - %d - %s - %d \n",parametro.titulo,parametro.anio,parametro.nacionalidad,parametro.director);
+    printf("%d - %s - %d - %s - %d \n",parametro.id, parametro.titulo,parametro.anio,
+           parametro.nacionalidad,parametro.director);
     return 0;
 }
 
 int mostrarLista(ePelicula lista[],int tamano)
 {
+    puts("\nLISTADO DE PELICULAS");
+    puts("ID - TITULO - ANIO - NACIONALIDAD - DIRECTOR");
+
     int i;
     for(i=0; i<tamano; i++)
     {
@@ -137,10 +132,11 @@ int menuOpciones()
     puts("1. Alta");
     puts("2. Modificar");
     puts("3. Baja");
-    puts("4. ");
-    puts("5. ");
+    puts("4. Nuevo director");
+    puts("5. Eliminar director");
     puts("6. Mostrar");
-    puts("Ingrese una opcion");
+    puts("7. Salir");
+    puts("Ingrese una opcion: ");
 
     scanf("%d", &opcion);
     return opcion;
@@ -149,37 +145,62 @@ int menuOpciones()
 
 int buscarPorId(ePelicula lista[],int tamano)
 {
-    int retorno = -1;
-    char comprobacion;
+    int indice = -1;
 
     int id;
-    puts("Ingrese ID: ");
+    puts("\nIngrese el ID de la pelicula que desea modificar: ");
     scanf("%d", &id);
 
     int i;
-    for(i=0; i<tamano; i++)
+    for(i = 0; i < tamano; i++)
     {
         if(lista[i].estado == OCUPADO && lista[i].id == id)
         {
-            retorno = i;
+            indice = i;
             break;
         }
     }
 
-    return retorno;
+
+    if(indice >= 0)
+    {
+        char comprobacion;
+        printf("Se encontro la pelicula: %s\n", lista[indice].titulo);
+        puts("Es correcto? s/n");
+        comprobacion = pideYValidaSiNo();
+
+        if(comprobacion == 'n')
+        {
+            indice = -2;
+        }
+    }
+    return indice;
 }
 
 
-int baja(ePelicula lista[], int tamano)
+int bajaPelicula(ePelicula lista[], int tamano)
 {
+    mostrarLista(lista, tamano);
+
     int indice;
     indice = buscarPorId(lista, tamano);
 
     if(indice >= 0)
     {
-        lista[indice].estado = LIBRE;
+        char comprobacion;
+        printf("Se borrara la pelicula: %s. Desea continuar? s/n\n", lista[indice].titulo);
+        comprobacion = pideYValidaSiNo();
+        if(comprobacion == 's')
+        {
+            lista[indice].estado = LIBRE;
+            puts("Se dio de baja la pelicula seleccionada");
+        }
+        else
+        {
+            puts("Accion cancelada");
+        }
     }
-    else
+    else if(indice == -1)
     {
         puts("No se encontro el ID");
     }
@@ -190,17 +211,20 @@ int baja(ePelicula lista[], int tamano)
 
 int modificacion(ePelicula lista[],int tamano)
 {
-    int opcion;
+    mostrarLista(lista, tamano);
+
     int indice;
     indice = buscarPorId(lista, tamano);
 
     if(indice >= 0)
     {
+        int opcion;
         puts("\nQue dato desea modificar?");
         puts("1. Titulo");
         puts("2. Anio");
         puts("3. Nacionalidad");
         puts("4. Director");
+        puts("5. Cancelar");
         scanf("%d", &opcion);
         switch(opcion)
         {
@@ -208,29 +232,39 @@ int modificacion(ePelicula lista[],int tamano)
             puts("Introduzca nuevo titulo: ");
             fflush(stdin);
             gets(lista[indice].titulo);
+            printf("Se modifico el titulo de la pelicula cuyo ID es: %d", lista[indice].id);
             break;
 
         case 2:
             puts("Introduzca nuevo anio: ");
             fflush(stdin);
             scanf("%d", &lista[indice].anio);
+            printf("Se modifico el anio de la pelicula cuyo ID es: %d", lista[indice].id);
             break;
 
         case 3:
             puts("Introduzca nueva nacionalidad: ");
             fflush(stdin);
             gets(lista[indice].nacionalidad);
+            printf("Se modifico la nacionalidad de la pelicula cuyo ID es: %d", lista[indice].id);
             break;
 
         case 4:
             puts("Introduzca nuevo director: ");
             fflush(stdin);
             scanf("%d", &lista[indice].director);
+            printf("Se modifico el director de la pelicula cuyo ID es: %d", lista[indice].id);
             break;
+
+        case 5:
+            break;
+
+        default:
+            puts("No ingreso una opcion valida");
 
         }
     }
-    else
+    else if(indice == -1)
     {
         puts("No se encontro el ID");
     }
@@ -240,17 +274,16 @@ int modificacion(ePelicula lista[],int tamano)
 
 
 
-int cargaDatos(ePelicula lista[],int tamano)
+int cargaInicialPeliculas(ePelicula lista[])
 {
 
-    char titulos[2][50] = {"La pistola desnuda", "norteamericana"};
-    int anios[2] = {1987, 2000};
-    char nacionalidades [2][50]= {"norteamericana", "norteamericana"};
-    int directores[2
-    ] = {3,5};
+    char titulos[2][50] = {"La pistola desnuda", "Hulk"};
+    int anios[2] = {1987, 2008};
+    char nacionalidades [2][50]= {"EEUU", "EEUU"};
+    int directores[2] = {3,5};
 
     int i;
-    for(i = 0; i < tamano; i++)
+    for(i = 0; i < 2; i++)
     {
         strcpy(lista[i].titulo, titulos[i]);
         lista[i]. anio = anios[i];
@@ -260,4 +293,45 @@ int cargaDatos(ePelicula lista[],int tamano)
         lista[i].estado = OCUPADO;
     }
     return 0;
+}
+
+
+
+
+int validaLargoCadena(char cadena[], int largo)
+{
+    while(strlen(cadena) >= largo)
+    {
+        puts("Nombre demasiado largo. Ingrese otro: ");
+        fflush(stdin);
+        gets(cadena);
+    }
+    return 0;
+}
+
+
+int validaRango(int numero, int max, int min)
+{
+    while(numero < min || numero > max)
+    {
+        puts("Fuera de rango. Ingrese nuevamente: ");
+        fflush(stdin);
+        scanf("%d", &numero);
+    }
+    return numero;
+}
+
+
+char pideYValidaSiNo()
+{
+    char letra;
+    fflush(stdin);
+    letra = getchar();
+
+    while(letra != 's' && letra != 'n')
+    {
+        puts("Ingrese una opcion correcta: s/n");
+        letra = getchar();
+    }
+    return letra;
 }

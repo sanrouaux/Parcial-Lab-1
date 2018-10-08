@@ -12,3 +12,31 @@
 	<string.h>
 	"peliculas.h"
 
+1538947948 source:c:\users\sanro\onedrive\escritorio\a\parcial-lab-1\archivopeliculas\main.c
+	<stdio.h>
+	<stdlib.h>
+	"peliculas.h"
+	"directores.h"
+
+1538947876 c:\users\sanro\onedrive\escritorio\a\parcial-lab-1\archivopeliculas\peliculas.h
+
+1538947877 source:c:\users\sanro\onedrive\escritorio\a\parcial-lab-1\archivopeliculas\peliculas.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"peliculas.h"
+	"validaciones.h"
+
+1538923407 source:c:\users\sanro\onedrive\escritorio\a\parcial-lab-1\archivopeliculas\validaciones.c
+
+1538923407 c:\users\sanro\onedrive\escritorio\a\parcial-lab-1\archivopeliculas\validaciones.h
+
+1538947877 c:\users\sanro\onedrive\escritorio\a\parcial-lab-1\archivopeliculas\directores.h
+
+1538948066 source:c:\users\sanro\onedrive\escritorio\a\parcial-lab-1\archivopeliculas\directores.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"directores.h"
+	"peliculas.h"
+
