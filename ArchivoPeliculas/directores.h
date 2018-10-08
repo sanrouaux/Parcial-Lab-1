@@ -28,3 +28,9 @@ int buscaIdSiguienteDirector(eDirector[],int);
 int altaDirector(eDirector[],int);
 int validaNuevoDirector(eDirector[], char[], int);
 int bajaDirector(eDirector[], int);
+int mostrarUnDirector(eDirector);
+int mostrarListaDirectores(eDirector[],int);
+int buscaDirectorPorNombre(eDirector[], char[], int);
+int buscaDirectorPorNombreDevuelveID(eDirector[], char[], int);
+int buscaDirectorPorId(eDirector[], int, int);
+

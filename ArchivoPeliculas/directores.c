@@ -21,14 +21,14 @@ int inicializaListaDirectores(eDirector lista[], int tamano)
 int cargaInicialDirectores(eDirector lista[])
 {
 
-    char nombres[2][100] = {"Martin Scorcese", "David Lynch"};
-    char paises[2][50] = {"EEUU", "EEUU"};
-    int dias [2] = {2,5};
-    int meses[2] = {12,5};
-    int anios[2] = {1960, 1954};
+    char nombres[4][100] = {"Martin Scorcese", "David Lynch", "Pedro Rodriguez", "Juan Perez"};
+    char paises[4][50] = {"EEUU", "EEUU", "Argentina", "Francia"};
+    int dias [4] = {2,5,7,23};
+    int meses[4] = {12,5, 11,2};
+    int anios[4] = {1960, 1954, 1980, 1976};
 
     int i;
-    for(i = 0; i < 2; i++)
+    for(i = 0; i < 4; i++)
     {
         strcpy(lista[i].nombre, nombres[i]);
         strcpy(lista[i].pais, paises[i]);
@@ -156,6 +156,8 @@ int validaNuevoDirector(eDirector lista[], char nombre[], int tamano)
 
 int bajaDirector(eDirector lista[], int tamano)
 {
+    mostrarListaDirectores(lista, tamano);
+
     char nombre[100];
     puts("Ingrese el nombre del director: ");
     fflush(stdin);
@@ -204,4 +206,57 @@ int buscaDirectorPorNombre(eDirector lista[], char nombre[], int tamano)
         }
     }
     return indice;
+}
+
+int buscaDirectorPorNombreDevuelveID(eDirector lista[], char nombre[], int tamano)
+{
+    int id = -1;
+    int i;
+    for(i = 0; i < tamano; i++)
+    {
+        if(stricmp(lista[i].nombre, nombre)==0)
+        {
+            id = lista[i].id;
+            break;
+        }
+    }
+    return id;
+}
+
+int mostrarUnDirector(eDirector parametro)
+{
+    printf("%d - %s - %d-%d-%d - %s \n",parametro.id, parametro.nombre, parametro.nacimiento.dia, parametro.nacimiento.mes,
+           parametro.nacimiento.anio, parametro.pais);
+    return 0;
+}
+
+int mostrarListaDirectores(eDirector lista[],int tamano)
+{
+    puts("\n---------LISTADO DE DIRECTORES-------------\n");
+    puts("ID - NOMBRE - FECHA DE NACIMIENTO - PAIS\n");
+
+    int i;
+    for(i = 0; i < tamano; i++)
+    {
+        if(lista[i].estado==OCUPADO)
+        {
+            mostrarUnDirector(lista[i]);
+        }
+    }
+    return 0;
+}
+
+int buscaDirectorPorId(eDirector lista[], int id, int tamano)
+{
+    int bandera = 0;
+    int i;
+    for(i = 0; i < tamano; i++)
+    {
+        if(lista[i].id == id)
+        {
+            bandera = 1;
+            break;
+        }
+    }
+    return bandera;
 }

@@ -40,3 +40,31 @@
 	"directores.h"
 	"peliculas.h"
 
+1539010043 source:c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\directores.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"directores.h"
+	"peliculas.h"
+
+1539010043 c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\directores.h
+
+1539009787 c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\peliculas.h
+
+1539010801 source:c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\main.c
+	<stdio.h>
+	<stdlib.h>
+	"peliculas.h"
+	"directores.h"
+
+1539011027 source:c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\peliculas.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"peliculas.h"
+	"directores.h"
+
+1538999106 c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\validaciones.h
+
+1538999106 source:c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\validaciones.c
+

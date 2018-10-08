@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "peliculas.h"
-#include "validaciones.h"
+#include "directores.h"
 
 
 int inicializaListaPeliculas(ePelicula lista[], int tamano)
@@ -52,7 +52,7 @@ int buscaIdSiguientePelicula(ePelicula lista[],int tamano)
 }
 
 
-int altaPelicula(ePelicula lista[],int tamano)
+int altaPelicula(ePelicula lista[], int tamano)
 {
     int indice;
     indice = buscaLugarLibrePelicula(lista, tamano);
@@ -89,17 +89,15 @@ int altaPelicula(ePelicula lista[],int tamano)
 
         lista[indice].id = id;
         lista[indice].estado = OCUPADO;
-
-        puts("Se dio de alta la pelicula");
-
     }
     else
     {
         puts("No hay mas espacio");
     }
 
-    return 0;
+    return indice;
 }
+
 
 int mostrarUno(ePelicula parametro)
 {
@@ -110,8 +108,8 @@ int mostrarUno(ePelicula parametro)
 
 int mostrarLista(ePelicula lista[],int tamano)
 {
-    puts("\nLISTADO DE PELICULAS");
-    puts("ID - TITULO - ANIO - NACIONALIDAD - DIRECTOR");
+    puts("\n---------LISTADO DE PELICULAS-------------\n");
+    puts("ID - TITULO - ANIO - NACIONALIDAD - DIRECTOR\n");
 
     int i;
     for(i=0; i<tamano; i++)
@@ -142,6 +140,20 @@ int menuOpciones()
     return opcion;
 }
 
+char menuListado()
+{
+    char opcion;
+
+    puts("a. Peliculas");
+    puts("b. Directores");
+    puts("c. Pelicula/as mas vieja/as");
+    puts("d. Peliculas con su director");
+    puts("e. Peliculas por director");
+    puts("f. Numero de peliculas dirigidas");
+    fflush(stdin);
+    opcion = getchar();
+    return opcion;
+}
 
 int buscarPorId(ePelicula lista[],int tamano)
 {
@@ -277,13 +289,13 @@ int modificacion(ePelicula lista[],int tamano)
 int cargaInicialPeliculas(ePelicula lista[])
 {
 
-    char titulos[2][50] = {"La pistola desnuda", "Hulk"};
-    int anios[2] = {1987, 2008};
-    char nacionalidades [2][50]= {"EEUU", "EEUU"};
-    int directores[2] = {3,5};
+    char titulos[4][50] = {"La pistola desnuda", "Hulk", "Volver al futuro", "Jurassic Park"};
+    int anios[4] = {1987, 2008, 1985, 2000};
+    char nacionalidades [4][50]= {"EEUU", "EEUU", "EEUU", "EEUU"};
+    int directores[4] = {1,2,3,4};
 
     int i;
-    for(i = 0; i < 2; i++)
+    for(i = 0; i < 4; i++)
     {
         strcpy(lista[i].titulo, titulos[i]);
         lista[i]. anio = anios[i];
@@ -335,3 +347,70 @@ char pideYValidaSiNo()
     }
     return letra;
 }
+
+
+int peliculasMasViejas(ePelicula lista[], int tamano)
+{
+    int anioMenor = 3000;
+    int i;
+    for(i = 0; i < tamano; i++)
+    {
+        if(lista[i].estado == OCUPADO && lista[i].anio < anioMenor)
+        {
+            anioMenor = lista[i].anio;
+        }
+    }
+
+    for(i = 0; i < tamano ; i++)
+    {
+        if(lista[i].estado == OCUPADO && lista[i].anio == anioMenor)
+        {
+            mostrarUno(lista[i]);
+        }
+    }
+    return 0;
+}
+
+int buscaPeliculaPorDirectorEImprime(ePelicula lista[], int idDirector, int tamano)
+{
+    int bandera = 0;
+    int i;
+    for(i = 0; i < tamano; i++)
+    {
+        if(lista[i].estado == OCUPADO && lista[i].director == idDirector)
+        {
+            printf("%s \n", lista[i].titulo);
+            bandera = 1;
+        }
+    }
+    if(bandera==0)
+    {
+        puts("No hay peliculas que mostrar");
+    }
+    return 0;
+}
+
+
+int cuentaNumeroPeliculas(ePelicula lista[], int idDirector, int tamano)
+{
+    int contador = 0;
+    int i;
+    for(i = 0; i < tamano; i++)
+    {
+        if(lista[i].estado == OCUPADO && lista[i].director == idDirector)
+        {
+            contador++;
+        }
+    }
+    return contador;
+}
+
+
+int buscaDirectorPorIndicePelicula(ePelicula lista[], int indice)
+{
+    int idDirector;
+    idDirector = lista[indice].director;
+    return idDirector;
+}
+
+
