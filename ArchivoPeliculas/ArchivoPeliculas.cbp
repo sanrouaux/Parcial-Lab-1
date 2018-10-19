@@ -38,6 +38,10 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="menuOpciones.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="menuOpciones.h" />
 		<Unit filename="peliculas.c">
 			<Option compilerVar="CC" />
 		</Unit>

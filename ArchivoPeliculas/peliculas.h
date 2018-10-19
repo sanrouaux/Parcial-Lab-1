@@ -1,3 +1,6 @@
+#ifndef PELICULAS_H_INCLUDED
+#define PELICULAS_H_INCLUDED
+
 #define OCUPADO 1
 #define LIBRE 0
 
@@ -13,29 +16,26 @@ typedef struct
 }ePelicula;
 
 
-//FUNCIONES
 int inicializaListaPeliculas(ePelicula[], int);
+int cargaInicialPeliculas(ePelicula[]);
 int buscaLugarLibrePelicula(ePelicula [],int);
 int buscaIdSiguientePelicula(ePelicula [],int);
-int altaPelicula(ePelicula[], int);
-int mostrarLista(ePelicula[],int);
-int mostrarUno(ePelicula parametro);
-int buscarPorId(ePelicula [],int );
-int bajaPelicula(ePelicula [], int );
-int modificacion(ePelicula [],int );
-int cargaInicialPeliculas(ePelicula[]);
+int pelicula_ingresaTitulo(ePelicula[], int);
+int pelicula_ingresaAnio(ePelicula[], int);
+int pelicula_ingresaNacionalidad(ePelicula[], int);
+int pelicula_ingresaIdDirector();
+int mostrarUnaPelicula(ePelicula parametro);
+int mostrarListaPeliculas(ePelicula[],int);
+int pideIdUsuario();
+int buscaPorIdDevuelveIndice(ePelicula[],int, int);
+int compruebaPeliculaEncontrada(ePelicula[], int);
+int bajaPelicula(ePelicula[], int );
 int peliculasMasViejas(ePelicula[], int);
 int buscaPeliculaPorDirectorEImprime(ePelicula[], int, int);
-int buscaDirectorPorIndicePelicula(ePelicula[], int);
+int buscaPeliculaPorIdDirectorYBorra(ePelicula[], int, int);
 int cuentaNumeroPeliculas(ePelicula[], int, int);
+int buscaDirectorPorIndicePelicula(ePelicula[], int);
+int imprimeTituloPelicula(ePelicula);
 
-int menuOpciones();
-char menuListado();
-
-int validaLargoCadena(char[], int);
-int validaRango(int, int, int);
-char pideYValidaSiNo();
-
-
-
+#endif // PELICULAS_H_INCLUDED
 

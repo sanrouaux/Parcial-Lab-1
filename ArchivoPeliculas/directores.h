@@ -1,7 +1,7 @@
 #define OCUPADO 1
 #define LIBRE 0
 
-//ESTRUCTURA DE DATOS
+
 typedef struct
 {
     int dia;
@@ -20,17 +20,19 @@ typedef struct
 }eDirector;
 
 
-//FUNCIONES
 int inicializaListaDirectores(eDirector[], int);
 int cargaInicialDirectores(eDirector[]);
 int buscaLugarLibreDirector(eDirector[],int);
 int buscaIdSiguienteDirector(eDirector[],int);
-int altaDirector(eDirector[],int);
+int director_ingresaNombre(char[]);
+int director_ingresaFechaNacimiento(eDirector[], int);
+int director_ingresaPais(eDirector[], int);
 int validaNuevoDirector(eDirector[], char[], int);
 int bajaDirector(eDirector[], int);
-int mostrarUnDirector(eDirector);
-int mostrarListaDirectores(eDirector[],int);
-int buscaDirectorPorNombre(eDirector[], char[], int);
+int buscaDirectorPorNombreDevuelveIndice(eDirector[], char[], int);
 int buscaDirectorPorNombreDevuelveID(eDirector[], char[], int);
-int buscaDirectorPorId(eDirector[], int, int);
+int mostrarUnDirector(eDirector);
+int imprimeNombreDirector(eDirector[], int, int);
+int mostrarListaDirectores(eDirector[],int);
+int validaExistenciaDirector(eDirector[], int, int);
 

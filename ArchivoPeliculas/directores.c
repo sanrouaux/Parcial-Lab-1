@@ -2,11 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "directores.h"
-#include "peliculas.h"
+#include "validaciones.h"
 
 
 
 
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param tamano int
+ * \return int
+ *
+ */
 int inicializaListaDirectores(eDirector lista[], int tamano)
 {
     int i;
@@ -18,6 +25,13 @@ int inicializaListaDirectores(eDirector lista[], int tamano)
     return 0;
 }
 
+
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \return int
+ *
+ */
 int cargaInicialDirectores(eDirector lista[])
 {
 
@@ -43,6 +57,13 @@ int cargaInicialDirectores(eDirector lista[])
 
 
 
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param tamano int
+ * \return int
+ *
+ */
 int buscaLugarLibreDirector(eDirector lista[],int tamano)
 {
     int indice = -1;
@@ -59,14 +80,28 @@ int buscaLugarLibreDirector(eDirector lista[],int tamano)
 }
 
 
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param tamano int
+ * \return int
+ *
+ */
 int buscaIdSiguienteDirector(eDirector lista[],int tamano)
 {
     int id_mayor;
+    int bandera = 0;
     int i;
     for(i = 0; i < tamano; i++)
     {
         if(lista[i].estado == OCUPADO)
         {
+            if(bandera == 0)
+            {
+                id_mayor = lista[i].id;
+                bandera = 1;
+            }
+
             if(lista[i].id > id_mayor)
             {
                 id_mayor = lista[i].id;
@@ -77,66 +112,80 @@ int buscaIdSiguienteDirector(eDirector lista[],int tamano)
 }
 
 
-int altaDirector(eDirector lista[],int tamano)
+/** \brief
+ *
+ * \param listaPeliculas[] ePelicula
+ * \param indice int
+ * \return int
+ *
+ */
+int director_ingresaNombre(char nombre[])
 {
-    int indice;
-    indice = buscaLugarLibreDirector(lista, tamano);
-
-    int id;
-    id = buscaIdSiguienteDirector(lista,tamano);
-
-
-    if(indice >= 0)
-    {
-        char buffer[1024];
-
-        puts("Ingrese nombre: ");
-        fflush(stdin);
-        gets(buffer);
-        validaLargoCadena(buffer, 100);
-        if(validaNuevoDirector(lista, buffer, tamano) == 1)
-        {
-            strcpy(lista[indice].nombre, buffer);
-
-            puts("Ingrese pais de origen: ");
-            fflush(stdin);
-            gets(buffer);
-            validaLargoCadena(buffer, 50);
-            strcpy(lista[indice].pais, buffer);
-
-            puts("Ingrese dia de nacimiento: ");
-            fflush(stdin);
-            scanf("%d", &lista[indice].nacimiento.dia);
-            lista[indice].nacimiento.dia = validaRango(lista[indice].nacimiento.dia, 31, 1);
-
-            puts("Ingrese mes de nacimiento: ");
-            fflush(stdin);
-            scanf("%d", &lista[indice].nacimiento.mes);
-            lista[indice].nacimiento.mes = validaRango(lista[indice].nacimiento.mes, 12, 1);
-
-            puts("Ingrese anio de nacimiento: ");
-            fflush(stdin);
-            scanf("%d", &lista[indice].nacimiento.anio);
-            lista[indice].nacimiento.anio = validaRango(lista[indice].nacimiento.anio, 2010, 1800);
-
-            lista[indice].id = id;
-            lista[indice].estado = OCUPADO;
-
-            puts("Se dio de alta un director");
-        }
-        else
-        {
-            puts("El director ya existe");
-        }
-    }
-    else
-    {
-        puts("No hay mas espacio");
-    }
+    char buffer[1024];
+    puts("Ingrese nombre: ");
+    fflush(stdin);
+    gets(buffer);
+    validaLargoCadena(buffer, 100);
+    validaSoloLetras(buffer, 100);
+    strcpy(nombre, buffer);
     return 0;
 }
 
 
+/** \brief
+ *
+ * \param listaPeliculas[] ePelicula
+ * \param indice int
+ * \return int
+ *
+ */
+int director_ingresaFechaNacimiento(eDirector lista[], int indice)
+{
+    puts("Ingrese dia de nacimiento: ");
+    fflush(stdin);
+    scanf("%d", &lista[indice].nacimiento.dia);
+    lista[indice].nacimiento.dia = validaRango(lista[indice].nacimiento.dia, 31, 1);
+    puts("Ingrese mes de nacimiento: ");
+    fflush(stdin);
+    scanf("%d", &lista[indice].nacimiento.mes);
+    lista[indice].nacimiento.mes = validaRango(lista[indice].nacimiento.mes, 12, 1);
+    puts("Ingrese anio de nacimiento: ");
+    fflush(stdin);
+    scanf("%d", &lista[indice].nacimiento.anio);
+    lista[indice].nacimiento.anio = validaRango(lista[indice].nacimiento.anio, 2018, 1900);
+    return 0;
+}
+
+
+/** \brief
+ *
+ * \param listaPeliculas[] ePelicula
+ * \param indice int
+ * \return int
+ *
+ */
+int director_ingresaPais(eDirector lista[], int indice)
+{
+    char buffer[1024];
+    puts("Ingrese pais de origen: ");
+    fflush(stdin);
+    gets(buffer);
+    validaLargoCadena(buffer, 50);
+    validaSoloLetras(buffer, 50);
+    strcpy(lista[indice].pais, buffer);
+    return 0;
+}
+
+
+
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param nombre[] char
+ * \param tamano int
+ * \return int
+ *
+ */
 int validaNuevoDirector(eDirector lista[], char nombre[], int tamano)
 {
     int retorno = 1;
@@ -145,55 +194,23 @@ int validaNuevoDirector(eDirector lista[], char nombre[], int tamano)
     {
         if(lista[i].estado == OCUPADO && stricmp(lista[i].nombre, nombre)==0)
         {
-            printf("*");
-            retorno = -1;
-            //break;
+            retorno = 0;
+            break;
         }
     }
     return retorno;
 }
 
 
-int bajaDirector(eDirector lista[], int tamano)
-{
-    mostrarListaDirectores(lista, tamano);
-
-    char nombre[100];
-    puts("Ingrese el nombre del director: ");
-    fflush(stdin);
-    gets(nombre);
-    int indice;
-    indice = buscaDirectorPorNombre(lista, nombre, tamano);
-
-    if(indice >= 0)
-    {
-        char comprobacion;
-        puts("Se encontro al siguiente director:");
-        printf("ID: %d - Nombre: %s - Pais: %s - Fecha de nacimiento: %d-%d-%d \n", lista[indice].id,
-               lista[indice].nombre, lista[indice].pais, lista[indice].nacimiento.dia, lista[indice].nacimiento.mes,
-               lista[indice].nacimiento.anio);
-        puts("Desea continuar? s/n");
-        comprobacion = pideYValidaSiNo();
-        if(comprobacion == 's')
-        {
-            lista[indice].estado = LIBRE;
-            puts("Se dio de baja al director");
-        }
-        else
-        {
-            puts("Accion cancelada");
-        }
-    }
-    else if(indice == -1)
-    {
-        puts("No se encontro al director");
-    }
-
-    return 0;
-}
-
-
-int buscaDirectorPorNombre(eDirector lista[], char nombre[], int tamano)
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param nombre[] char
+ * \param tamano int
+ * \return int
+ *
+ */
+int buscaDirectorPorNombreDevuelveIndice(eDirector lista[], char nombre[], int tamano)
 {
     int indice = -1;
     int i;
@@ -208,6 +225,14 @@ int buscaDirectorPorNombre(eDirector lista[], char nombre[], int tamano)
     return indice;
 }
 
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param nombre[] char
+ * \param tamano int
+ * \return int
+ *
+ */
 int buscaDirectorPorNombreDevuelveID(eDirector lista[], char nombre[], int tamano)
 {
     int id = -1;
@@ -223,6 +248,12 @@ int buscaDirectorPorNombreDevuelveID(eDirector lista[], char nombre[], int taman
     return id;
 }
 
+/** \brief
+ *
+ * \param parametro eDirector
+ * \return int
+ *
+ */
 int mostrarUnDirector(eDirector parametro)
 {
     printf("%d - %s - %d-%d-%d - %s \n",parametro.id, parametro.nombre, parametro.nacimiento.dia, parametro.nacimiento.mes,
@@ -230,6 +261,13 @@ int mostrarUnDirector(eDirector parametro)
     return 0;
 }
 
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param tamano int
+ * \return int
+ *
+ */
 int mostrarListaDirectores(eDirector lista[],int tamano)
 {
     puts("\n---------LISTADO DE DIRECTORES-------------\n");
@@ -246,17 +284,48 @@ int mostrarListaDirectores(eDirector lista[],int tamano)
     return 0;
 }
 
-int buscaDirectorPorId(eDirector lista[], int id, int tamano)
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param id int
+ * \param tamano int
+ * \return int
+ *
+ */
+int validaExistenciaDirector(eDirector lista[], int id, int tamano)
 {
-    int bandera = 0;
+    int retorno = 0;
     int i;
     for(i = 0; i < tamano; i++)
     {
-        if(lista[i].id == id)
+        if(lista[i].estado == OCUPADO && lista[i].id == id)
         {
-            bandera = 1;
+            retorno = 1;
             break;
         }
     }
-    return bandera;
+    return retorno;
+}
+
+
+/** \brief
+ *
+ * \param eDirector[]
+ * \param int
+ * \param int
+ * \return int
+ *
+ */
+int imprimeNombreDirector(eDirector listaDirectores[], int id, int tamanoDirectores)
+{
+    int i;
+    for(i=0; i<tamanoDirectores; i++)
+    {
+        if(listaDirectores[i].id == id)
+        {
+            printf("%s\n", listaDirectores[i].nombre);
+            break;
+        }
+    }
+    return 0;
 }

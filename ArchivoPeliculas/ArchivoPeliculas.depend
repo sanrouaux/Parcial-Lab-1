@@ -68,3 +68,45 @@
 
 1538999106 source:c:\users\alumno\desktop\rouaux\parcial-lab-1\archivopeliculas\validaciones.c
 
+1539526280 source:c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\validaciones.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"validaciones.h"
+
+1539722373 source:c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\directores.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"directores.h"
+	"validaciones.h"
+
+1539722373 c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\directores.h
+
+1539722293 source:c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\peliculas.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"peliculas.h"
+	"validaciones.h"
+
+1539722293 c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\peliculas.h
+
+1539723788 source:c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"peliculas.h"
+	"directores.h"
+	"menuOpciones.h"
+	"validaciones.h"
+
+1539521946 c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\menuopciones.h
+
+1539723740 source:c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\menuopciones.c
+	<stdio.h>
+	<stdlib.h>
+	"menuOpciones.h"
+
+1539483387 c:\users\sanro\onedrive\escritorio\parcial lab\parcial-lab-1\archivopeliculas\validaciones.h
+
