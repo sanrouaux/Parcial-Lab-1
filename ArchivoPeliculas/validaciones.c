@@ -3,31 +3,25 @@
 #include <string.h>
 #include "validaciones.h"
 
-/** \brief
+/** \brief valida el largo de una cadena de caracteres
  *
- * \param cadena[] char
- * \param largoMaximo int
- * \return int
+ * \param cadena[] char Cadena a ser medida
+ * \param largoMaximo int Largo maximo que puede tener la cadena, incluyendo al caracter de cierre
+ * \return int retorna 1 si el largo es valido, y 0 si el largo no es valido, y -1 si no se introdujeron caracteres
  *
  */
-int validaLargoCadena(char cadena[], int largoMaximo)
+int validaLargoCadena(char* cadena, int largoMaximo)
 {
-    while(strlen(cadena) >= largoMaximo || strlen(cadena) == 0)
+    int retorno = 1;
+    if(strlen(cadena) >= largoMaximo)
     {
-        if(strlen(cadena) == 0)
-        {
-            puts("No ingreso ningun caracter. Ingrese nuevamente: ");
-            fflush(stdin);
-            gets(cadena);
-        }
-        else
-        {
-            puts("Nombre demasiado largo. Ingrese otro: ");
-            fflush(stdin);
-            gets(cadena);
-        }
+        retorno = 0;
     }
-    return 0;
+    else if(strlen(cadena) == 0)
+    {
+        retorno = -1;
+    }
+    return retorno;
 }
 
 
@@ -111,42 +105,81 @@ int validaSoloNumero(char cadena[])
 }
 
 
+/** \brief comprueba si una cadena de caracteres tiene todos sus elementos alfabeticos
+ *
+ * \param char[] cadena a ser evaluada
+ * \return int devuelve '1' si la comprobacion es positiva; '0' si es negativa
+ *
+ */
+int validaSoloLetras(char* cadena)
+{
+
+    int retorno = 1;
+
+    int largo;
+    largo = strlen(cadena);
+
+    int i;
+    for(i=0; i<largo; i++)
+    {
+        if((cadena[i] < 'a' || cadena[i] > 'z') && (cadena[i] < 'A' || cadena[i] > 'Z') && cadena[i] != ' '
+           && cadena[i] != ',')
+        {
+            retorno = 0;
+            break;
+        }
+    }
+    return retorno;
+}
+
+
+
+
 /** \brief
  *
  * \param cadena[] char
- * \param largoMaximo int
+ * \param mensaje[] char
+ * \param largo int
  * \return int
  *
  */
-int validaSoloLetras(char cadena[], int largoMaximo)
+int ingresaCadenaSoloLetras(char cadena[], char mensaje[], int largo)
 {
+    char buffer[1024];
+    int validacionLargo;
+    int validacionCaracteres;
 
-    int largoCadena;
-    int caracterInvalido;
-    int i;
-    do
+    puts(mensaje);
+    fflush(stdin);
+    gets(buffer);
+
+    validacionLargo = validaLargoCadena(buffer, largo);
+    validacionCaracteres = validaSoloLetras(buffer);
+
+    while(validacionLargo != 1 || validacionCaracteres != 1)
     {
-        caracterInvalido = 0;
-        largoCadena = strlen(cadena);
-
-                      for(i=0; i<largoCadena; i++)
+        if(validacionLargo == 0)
         {
-            if((cadena[i] < 'a' || cadena[i] > 'z') && (cadena[i] < 'A' || cadena[i] > 'Z') && cadena[i] != ' ')
-            {
-                caracterInvalido = 1;
-                break;
-            }
+            puts("Demasiados carcateres");
         }
 
-        if(caracterInvalido == 1)
+        if(validacionLargo == -1)
         {
-            puts("Ingreso un caracter invalido. Ingrese la cadena nuevamente:");
-            fflush(stdin);
-            gets(cadena);
-            validaLargoCadena(cadena, largoMaximo);
+            puts("No ingreso ningun caracter");
         }
+
+        if(validacionCaracteres == 0)
+        {
+            puts("Ingreso caracteres invalidos");
+        }
+
+        puts("Ingrese nuevamente: ");
+        fflush(stdin);
+        gets(buffer);
+        validacionLargo = validaLargoCadena(buffer, largo);
+        validacionCaracteres = validaSoloLetras(buffer);
     }
-    while(caracterInvalido == 1);
 
+    strcpy(cadena, buffer);
     return 0;
 }

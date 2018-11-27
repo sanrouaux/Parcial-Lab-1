@@ -12,7 +12,6 @@
 
 int main()
 {
-
     ePelicula listaPeliculas[TAMANO_PELICULAS];
     inicializaListaPeliculas(listaPeliculas, TAMANO_PELICULAS);
     cargaInicialPeliculas(listaPeliculas);
@@ -25,7 +24,6 @@ int main()
     int opcionMenuPrincipal;
     int opcionModificacion;
     char opcionListar;
-    int confirmaSeguir;
     int bandera;
 
     int indicePelicula;
@@ -33,7 +31,6 @@ int main()
     int indiceDirector;
     int idDirector;
 
-    int existenciaDirector;
     char auxNombreDirector[100];
     int contadorPeliculas;
     int mayorNumeroPeliculas;
@@ -53,18 +50,16 @@ int main()
                 pelicula_ingresaNacionalidad(listaPeliculas, indicePelicula);
                 mostrarListaDirectores(listaDirectores, TAMANO_DIRECTORES);
                 idDirector = pelicula_ingresaIdDirector();
-                existenciaDirector = validaExistenciaDirector(listaDirectores, idDirector, TAMANO_DIRECTORES);
 
-                while(existenciaDirector==0)
+                while(validaExistenciaDirector(listaDirectores, idDirector, TAMANO_DIRECTORES)==0)
                 {
                     puts("\nEL DIRECTOR NO EXISTE. INGRESE UN ID CORRECTO: \n");
                     mostrarListaDirectores(listaDirectores, TAMANO_DIRECTORES);
-                    idDirector = pelicula_ingresaIdDirector(listaPeliculas, TAMANO_PELICULAS);
-                    existenciaDirector = validaExistenciaDirector(listaDirectores, idDirector, TAMANO_DIRECTORES);
+                    idDirector = pelicula_ingresaIdDirector();
                 }
+
                 listaPeliculas[indicePelicula].director = idDirector;
-                idPelicula = buscaIdSiguientePelicula(listaPeliculas, TAMANO_PELICULAS);
-                listaPeliculas[indicePelicula].id = idPelicula;
+                pelicula_cargaId(listaPeliculas, TAMANO_PELICULAS, indicePelicula);
                 listaPeliculas[indicePelicula].estado = OCUPADO;
                 puts("\nSE DIO DE ALTA UNA PELICULA\n");
             }
@@ -80,8 +75,7 @@ int main()
             indicePelicula = buscaPorIdDevuelveIndice(listaPeliculas, TAMANO_PELICULAS, idPelicula);
             if(indicePelicula>=0)
             {
-                confirmaSeguir = compruebaPeliculaEncontrada(listaPeliculas, indicePelicula);
-                if(confirmaSeguir==1)
+                if(compruebaPeliculaEncontrada(listaPeliculas, indicePelicula)=='s')
                 {
                     opcionModificacion = menuModificacion();
 
@@ -105,15 +99,14 @@ int main()
                     case 4:
                         mostrarListaDirectores(listaDirectores, TAMANO_DIRECTORES);
                         idDirector = pelicula_ingresaIdDirector();
-                        existenciaDirector = validaExistenciaDirector(listaDirectores, idDirector, TAMANO_DIRECTORES);
 
-                        while(existenciaDirector==0)
+                        while(validaExistenciaDirector(listaDirectores, idDirector, TAMANO_DIRECTORES)==0)
                         {
                             puts("\nEL DIRECTOR NO EXISTE. INGRESE UN ID CORRECTO: \n");
                             mostrarListaDirectores(listaDirectores, TAMANO_DIRECTORES);
                             idDirector = pelicula_ingresaIdDirector(listaPeliculas, TAMANO_PELICULAS);
-                            existenciaDirector = validaExistenciaDirector(listaDirectores, idDirector, TAMANO_DIRECTORES);
                         }
+
                         listaPeliculas[indicePelicula].director = idDirector;
                         puts("\nSE MODIFICO UNA PELICULAS\n");
                         break;
@@ -140,9 +133,7 @@ int main()
             indicePelicula = buscaPorIdDevuelveIndice(listaPeliculas, TAMANO_PELICULAS, idPelicula);
             if(indicePelicula >= 0)
             {
-                printf("Se borrara la pelicula: %s. Desea continuar? s/n\n", listaPeliculas[indicePelicula].titulo);
-                confirmaSeguir = pideYValidaSiNo();
-                if(confirmaSeguir == 's')
+                if(compruebaPeliculaEncontrada(listaPeliculas, indicePelicula)=='s')
                 {
                     listaPeliculas[indicePelicula].estado = LIBRE;
                     puts("\nSE DIO DE BAJA UNA PELICULA\n");
@@ -154,7 +145,7 @@ int main()
             }
             else
             {
-                puts("\nNO SE ENCONTRO EL ID\n");
+                puts("\nNO SE ENCONTRO EL FILM\n");
             }
             break;
 
@@ -162,14 +153,13 @@ int main()
             indiceDirector = buscaLugarLibreDirector(listaDirectores, TAMANO_DIRECTORES);
             if(indiceDirector >= 0)
             {
-                director_ingresaNombre(auxNombreDirector);
-                strcpy(listaDirectores[indiceDirector].nombre, auxNombreDirector);
-                if(validaNuevoDirector(listaDirectores, listaDirectores[indiceDirector].nombre, TAMANO_DIRECTORES))
+                director_ingresaNombre(listaDirectores, indiceDirector);
+
+                if(validaNuevoDirector(listaDirectores, indiceDirector, TAMANO_DIRECTORES))
                 {
                     director_ingresaFechaNacimiento(listaDirectores, indiceDirector);
                     director_ingresaPais(listaDirectores, indiceDirector);
-                    idDirector = buscaIdSiguienteDirector(listaDirectores, TAMANO_DIRECTORES);
-                    listaDirectores[indiceDirector].id = idDirector;
+                    director_cargaId(listaDirectores, TAMANO_DIRECTORES, indiceDirector);
                     listaDirectores[indiceDirector].estado = OCUPADO;
                 }
                 else
@@ -185,19 +175,10 @@ int main()
 
         case 5:
             mostrarListaDirectores(listaDirectores, TAMANO_DIRECTORES);
-            director_ingresaNombre(auxNombreDirector);
-            indiceDirector = buscaDirectorPorNombreDevuelveIndice(listaDirectores, auxNombreDirector, TAMANO_DIRECTORES);
-            idDirector = buscaDirectorPorNombreDevuelveID(listaDirectores, auxNombreDirector, TAMANO_DIRECTORES);
+            indiceDirector = buscaDirectorPorNombreDevuelveIndice(listaDirectores, TAMANO_DIRECTORES);
             if(indiceDirector>=0)
             {
-                puts("\nSe encontro al siguiente director:");
-                printf("ID: %d - Nombre: %s - Pais: %s - Fecha de nacimiento: %d-%d-%d \n", listaDirectores[indiceDirector].id,
-                       listaDirectores[indiceDirector].nombre, listaDirectores[indiceDirector].pais,
-                       listaDirectores[indiceDirector].nacimiento.dia, listaDirectores[indiceDirector].nacimiento.mes,
-                       listaDirectores[indiceDirector].nacimiento.anio);
-                puts("Desea continuar? s/n");
-                confirmaSeguir = pideYValidaSiNo();
-                if(confirmaSeguir=='s')
+                if(compruebaDirectorEncontrado(listaDirectores, indiceDirector)=='s')
                 {
                     listaDirectores[indiceDirector].estado = LIBRE;
                     buscaPeliculaPorIdDirectorYBorra(listaPeliculas, idDirector, TAMANO_PELICULAS);
@@ -231,7 +212,7 @@ int main()
                 break;
 
             case 'd':
-                puts("PELICULA   -   DIRECTOR");
+                puts("PELICULA            DIRECTOR");
                 int i;
                 for(i = 0; i < TAMANO_PELICULAS; i++)
                 {
@@ -245,13 +226,11 @@ int main()
                 break;
 
             case 'e':
-                puts("Introduzca el nombre del director:");
-                fflush(stdin);
-                gets(auxNombreDirector);
-                idDirector = buscaDirectorPorNombreDevuelveID(listaDirectores, auxNombreDirector, TAMANO_DIRECTORES);
+                mostrarListaDirectores(listaDirectores, TAMANO_DIRECTORES);
+                idDirector = buscaDirectorPorNombreDevuelveID(listaDirectores, TAMANO_DIRECTORES);
                 if(idDirector>=0)
                 {
-                    buscaPeliculaPorDirectorEImprime(listaPeliculas, idDirector, TAMANO_PELICULAS);
+                    buscaPeliculaPorIdDirectorEImprime(listaPeliculas, idDirector, TAMANO_PELICULAS);
                 }
                 else
                 {
@@ -260,14 +239,12 @@ int main()
                 break;
 
             case 'f':
-                puts("Introduzca el nombre del director: ");
-                fflush(stdin);
-                gets(auxNombreDirector);
-                idDirector = buscaDirectorPorNombreDevuelveID(listaDirectores, auxNombreDirector, TAMANO_DIRECTORES);
+                mostrarListaDirectores(listaDirectores, TAMANO_DIRECTORES);
+                idDirector = buscaDirectorPorNombreDevuelveID(listaDirectores, TAMANO_DIRECTORES);
                 if(idDirector>=0)
                 {
                     contadorPeliculas = cuentaNumeroPeliculas(listaPeliculas, idDirector, TAMANO_PELICULAS);
-                    printf("%s dirigio %d peliculas", auxNombreDirector, contadorPeliculas);
+                    printf("El director seleccionado dirigio %d peliculas", contadorPeliculas);
                 }
                 else
                 {
@@ -282,21 +259,19 @@ int main()
                     if(listaDirectores[i].estado==OCUPADO)
                     {
                         contadorPeliculas = cuentaNumeroPeliculas(listaPeliculas, listaDirectores[i].id, TAMANO_PELICULAS);
-                    }
-
-                    if(bandera == 0)
-                    {
-                        mayorNumeroPeliculas = contadorPeliculas;
-                        bandera = 1;
-                    }
-
-                    if(contadorPeliculas > mayorNumeroPeliculas)
-                    {
-                        mayorNumeroPeliculas = contadorPeliculas;
+                        if(bandera == 0)
+                        {
+                            mayorNumeroPeliculas = contadorPeliculas;
+                            bandera = 1;
+                        }
+                        else
+                        {
+                            mayorNumeroPeliculas = contadorPeliculas;
+                        }
                     }
                 }
 
-                puts("\nEl director con mas peliculas es:");
+                puts("\nEl\Los director\es con mas peliculas es\son:");
 
                 for(i=0; i<TAMANO_DIRECTORES; i++)
                 {
@@ -306,7 +281,6 @@ int main()
                         imprimeNombreDirector(listaDirectores, listaDirectores[i].id, TAMANO_DIRECTORES);
                     }
                 }
-
                 break;
 
             default:

@@ -119,15 +119,11 @@ int buscaIdSiguienteDirector(eDirector lista[],int tamano)
  * \return int
  *
  */
-int director_ingresaNombre(char nombre[])
+int director_ingresaNombre(eDirector lista[], int indice)
 {
-    char buffer[1024];
-    puts("Ingrese nombre: ");
-    fflush(stdin);
-    gets(buffer);
-    validaLargoCadena(buffer, 100);
-    validaSoloLetras(buffer, 100);
-    strcpy(nombre, buffer);
+    char auxNombre[100];
+    ingresaCadenaSoloLetras(auxNombre, "Ingrese el nombre del director", 100);
+    strcpy(lista[indice].nombre, auxNombre);
     return 0;
 }
 
@@ -167,16 +163,30 @@ int director_ingresaFechaNacimiento(eDirector lista[], int indice)
 int director_ingresaPais(eDirector lista[], int indice)
 {
     char buffer[1024];
-    puts("Ingrese pais de origen: ");
-    fflush(stdin);
-    gets(buffer);
-    validaLargoCadena(buffer, 50);
-    validaSoloLetras(buffer, 50);
+    ingresaCadenaSoloLetras(buffer, "Ingrese pais de origen: ", 50);
     strcpy(lista[indice].pais, buffer);
     return 0;
 }
 
 
+/** \brief
+ *
+ * \param lista[] eDirector
+ * \param tamano int
+ * \param indice int
+ * \return int
+ *
+ */
+int director_cargaId(eDirector lista[], int tamano, int indice)
+{
+    int retorno = -1;
+    if(lista != NULL && tamano > 0)
+    {
+        retorno = 1;
+        lista[indice].id = buscaIdSiguienteDirector(lista, tamano);
+    }
+    return retorno;
+}
 
 /** \brief
  *
@@ -186,13 +196,13 @@ int director_ingresaPais(eDirector lista[], int indice)
  * \return int
  *
  */
-int validaNuevoDirector(eDirector lista[], char nombre[], int tamano)
+int validaNuevoDirector(eDirector lista[], int indice, int tamano)
 {
     int retorno = 1;
     int i;
     for(i = 0; i < tamano; i++)
     {
-        if(lista[i].estado == OCUPADO && stricmp(lista[i].nombre, nombre)==0)
+        if(lista[i].estado == OCUPADO && stricmp(lista[indice].nombre, lista[i].nombre)==0)
         {
             retorno = 0;
             break;
@@ -210,9 +220,14 @@ int validaNuevoDirector(eDirector lista[], char nombre[], int tamano)
  * \return int
  *
  */
-int buscaDirectorPorNombreDevuelveIndice(eDirector lista[], char nombre[], int tamano)
+int buscaDirectorPorNombreDevuelveIndice(eDirector lista[], int tamano)
 {
     int indice = -1;
+
+    char nombre[1024];
+    puts("Ingrese el nombre del director: ");
+    gets(nombre);
+
     int i;
     for(i = 0; i < tamano; i++)
     {
@@ -233,9 +248,13 @@ int buscaDirectorPorNombreDevuelveIndice(eDirector lista[], char nombre[], int t
  * \return int
  *
  */
-int buscaDirectorPorNombreDevuelveID(eDirector lista[], char nombre[], int tamano)
+int buscaDirectorPorNombreDevuelveID(eDirector lista[], int tamano)
 {
     int id = -1;
+
+    char nombre[100];
+    ingresaCadenaSoloLetras(nombre, "Introduzca el nombre del director:", 100);
+
     int i;
     for(i = 0; i < tamano; i++)
     {
@@ -328,4 +347,22 @@ int imprimeNombreDirector(eDirector listaDirectores[], int id, int tamanoDirecto
         }
     }
     return 0;
+}
+
+/** \brief
+ *
+ * \param listaPeliculas[] ePelicula
+ * \param indice int
+ * \return int
+ *
+ */
+char compruebaDirectorEncontrado(eDirector lista[], int indice)
+{
+    char confirma = 'n';
+    printf("Se encontro al director: ");
+    mostrarUnDirector(lista[indice]);
+    puts("Es correcto? s/n");
+    confirma = pideYValidaSiNo();
+
+    return confirma;
 }

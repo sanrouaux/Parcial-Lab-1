@@ -61,17 +61,21 @@ int cargaInicialPeliculas(ePelicula listaPeliculas[])
  */
 int buscaLugarLibrePelicula(ePelicula listaPeliculas[],int tamanoPeliculas)
 {
-    int retorno = -1;
-    int i;
-    for(i = 0; i < tamanoPeliculas; i++)
+    int indiceLibre = -1;
+
+    if(listaPeliculas != NULL && tamanoPeliculas > 0)
     {
-        if(listaPeliculas[i].estado == LIBRE)
+        int i;
+        for(i = 0; i < tamanoPeliculas; i++)
         {
-            retorno = i;
-            break;
+            if(listaPeliculas[i].estado == LIBRE)
+            {
+                indiceLibre = i;
+                break;
+            }
         }
     }
-    return retorno;
+    return indiceLibre;
 }
 
 
@@ -117,10 +121,7 @@ int buscaIdSiguientePelicula(ePelicula listaPeliculas[],int tamanoPeliculas)
 int pelicula_ingresaTitulo(ePelicula listaPeliculas[], int indice)
 {
     char buffer[1024];
-    puts("Ingrese titulo: ");
-    fflush(stdin);
-    gets(buffer);
-    validaLargoCadena(buffer, 100);
+    ingresaCadenaSoloLetras(buffer, "Ingrese titulo: ", 100);
     strcpy(listaPeliculas[indice].titulo, buffer);
     return 0;
 }
@@ -153,11 +154,7 @@ int pelicula_ingresaAnio(ePelicula listaPeliculas[], int indice)
 int pelicula_ingresaNacionalidad(ePelicula listaPeliculas[], int indice)
 {
     char buffer[1024];
-    puts("Ingrese nacionalidad del film: ");
-    fflush(stdin);
-    gets(buffer);
-    validaLargoCadena(buffer, 10);
-    validaSoloLetras(buffer, 10);
+    ingresaCadenaSoloLetras(buffer, "Ingrese nacionalidad de la pelicula", 50);
     strcpy(listaPeliculas[indice].nacionalidad, buffer);
     return 0;
 }
@@ -178,6 +175,19 @@ int pelicula_ingresaIdDirector()
     return id;
 }
 
+/** \brief
+ *
+ * \param lista[] ePelicula
+ * \param tamano int
+ * \param indice int
+ * \return int
+ *
+ */
+int pelicula_cargaId(ePelicula lista[], int tamano, int indice)
+{
+    lista[indice].id = buscaIdSiguientePelicula(lista, tamano);
+    return 1;
+}
 
 /** \brief
  *
@@ -224,6 +234,7 @@ int pideIdUsuario()
 {
     int id;
     puts("\nIngrese el ID de la pelicula: ");
+    fflush(stdin);
     scanf("%d", &id);
     return id;
 }
@@ -260,19 +271,14 @@ int buscaPorIdDevuelveIndice(ePelicula listaPeliculas[],int tamanoPeliculas, int
  * \return int
  *
  */
-int compruebaPeliculaEncontrada(ePelicula listaPeliculas[], int indice)
+char compruebaPeliculaEncontrada(ePelicula listaPeliculas[], int indice)
 {
-    int retorno = 1;
-    char confirma;
+    char confirma = 'n';
     printf("Se encontro la pelicula: %s\n", listaPeliculas[indice].titulo);
     puts("Es correcto? s/n");
     confirma = pideYValidaSiNo();
 
-    if(confirma == 'n')
-    {
-        retorno = 0;
-    }
-    return retorno;
+    return confirma;
 }
 
 
@@ -321,7 +327,7 @@ int peliculasMasViejas(ePelicula listaPeliculas[], int tamanoPeliculas)
  * \return int
  *
  */
-int buscaPeliculaPorDirectorEImprime(ePelicula listaPeliculas[], int idDirector, int tamanoPeliculas)
+int buscaPeliculaPorIdDirectorEImprime(ePelicula listaPeliculas[], int idDirector, int tamanoPeliculas)
 {
     int bandera = 0;
     int i;
@@ -409,6 +415,6 @@ int buscaDirectorPorIndicePelicula(ePelicula listaPeliculas[], int indice)
  */
 int imprimeTituloPelicula(ePelicula pelicula)
 {
-    printf("%s   -   ", pelicula.titulo);
+    printf("%-20s", pelicula.titulo);
     return 0;
 }
